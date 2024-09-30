@@ -6,7 +6,7 @@ pipeline {
         sh 'echo"Pulling"'
         git branch: 'salah', 
             url: 'https://github.com/salahbnh/Project-DevOps.git'
-            credentialsId:'jenkins-salah', 
+            credentialsId: 'jenkins-salah', 
       }
     }
   }
