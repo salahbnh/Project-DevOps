@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Checkout GIT') {
       steps {
-        sh 'echo"Pulling"'
+        echo 'Pulling'
         git(
           branch: 'salah',
           url: 'https://github.com/salahbnh/Project-DevOps.git',
