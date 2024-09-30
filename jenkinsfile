@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+
+    stage('hello') {
+        steps {
+            echo 'Hello world'
+        }
+    }
+    
+}
+
+    // stage('Build') {
+    //     steps {
+    //         sh "mvn compile"
+    //     }
+    // }
+            // git branch: 'salah', 
+            // url: 'https://github.com/salahbnh/Project-DevOps.git'
+            // credentialsId:r, 
