@@ -1,9 +1,12 @@
 pipeline {
   agent any
   stages {
-    stage('hello') {
+    stage('Checkout GIT') {
       steps {
-        sh 'echo "Hello World"'
+        sh 'echo"Pulling"'
+        git branch: 'salah', 
+        url: 'https://github.com/salahbnh/Project-DevOps.git'
+        credentialsId:'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', 
       }
     }
   }
@@ -14,6 +17,3 @@ pipeline {
     //         sh "mvn compile"
     //     }
     // }
-            // git branch: 'salah', 
-            // url: 'https://github.com/salahbnh/Project-DevOps.git'
-            // credentialsId:r, 
