@@ -18,5 +18,12 @@ pipeline {
         sh 'mvn compile'
       }
     }
+
+    stage('Mvn SonarQube') {
+      steps {
+        echo 'Tests statiques'
+        sh 'mvn sonar:sonar'
+      }
+    }
   }
 }
