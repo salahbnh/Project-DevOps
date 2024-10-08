@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  environment {
+    SONAR_TOKEN = credentials('jenkins-sonar') 
+  }
   stages {
     stage('Checkout GIT') {
       steps {
@@ -16,6 +19,13 @@ pipeline {
       steps {
         echo 'Building Maven Project'
         sh 'mvn compile'
+      }
+    }
+
+    stage('Mvn SonarQube') {
+      steps {
+        echo 'Static Analysis'
+        sh "mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
       }
     }
   }
