@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  environment {
+    SONAR_TOKEN = credentials('sonar-token-id') // Make sure to set this in Jenkins Credentials
+  }
   stages {
     stage('Checkout GIT') {
       steps {
@@ -21,8 +24,8 @@ pipeline {
 
     stage('Mvn SonarQube') {
       steps {
-        echo 'Tests statiques'
-        sh 'mvn sonar:sonar'
+        echo 'Static Analysis'
+        sh "mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
       }
     }
   }
