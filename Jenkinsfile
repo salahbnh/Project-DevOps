@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    SONAR_TOKEN = credentials('sonar-token-id') // Make sure to set this in Jenkins Credentials
+    SONAR_TOKEN = credentials('jenkins-sonar') // Make sure to set this in Jenkins Credentials
   }
   stages {
     stage('Checkout GIT') {
