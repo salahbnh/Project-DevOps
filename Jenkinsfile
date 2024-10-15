@@ -1,20 +1,9 @@
 pipeline {
   agent any
   environment {
-    SONAR_TOKEN = credentials('jenkins-sonar') // Make sure to set this in Jenkins Credentials
+    SONAR_TOKEN = credentials('jenkins-sonar')
   }
   stages {
-    // stage('Checkout GIT') {
-    //   steps {
-    //     echo 'Pulling'
-    //     git(
-    //       branch: 'salah',
-    //       url: 'https://github.com/salahbnh/Project-DevOps.git',
-    //       credentialsId: 'jenkins-salah'
-    //     )
-    //   }
-    // }
-    
     stage('Build') {
       steps {
         echo 'Building Maven Project'
@@ -27,6 +16,13 @@ pipeline {
         echo 'Static Analysis'
         sh "mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
       }
+    }
+
+    stage('Mvn Test') {
+        steps {
+          echo 'Unit Tests'
+          sh 'mvn test'
+        }
     }
   }
 }
