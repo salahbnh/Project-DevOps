@@ -11,13 +11,6 @@ pipeline {
       }
     }
 
-    stage('Mvn SonarQube') {
-      steps {
-        echo 'Static Analysis'
-        sh "mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
-      }
-    }
-
     stage('Mvn Test') {
         steps {
           echo 'Unit Tests'
@@ -29,5 +22,19 @@ pipeline {
             }
         }
     }
+
+    stage('Mvn SonarQube') {
+      steps {
+        echo 'Static Analysis'
+        sh "mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
+      }
+    }
+
+     stage('Deploy To Nexus') {
+          steps {
+            echo 'Deploiment to Nexus'
+            sh 'mvn deploy -Dnexus.login=<admin> -Dnexus.password=<nexus>'
+          }
+        }
   }
 }

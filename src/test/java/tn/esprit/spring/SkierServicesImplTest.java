@@ -21,7 +21,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SkierServicesImplTest {
-
     @Mock
     private ISkierRepository skierRepository;
 
