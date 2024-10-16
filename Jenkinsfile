@@ -28,5 +28,12 @@ pipeline {
         sh "mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
       }
     }
+
+    stage('Mvn Test') {
+          steps {
+            echo 'Test unitaire'
+            sh 'mvn test'
+          }
+        }
   }
 }
