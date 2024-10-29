@@ -1,20 +1,11 @@
-package tn.esprit.spring;
+@SpringBootTest
+public class GestionStationSkiApplicationTests {
 
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
-import tn.esprit.spring.services.SkierServicesImpl;
+    @MockBean
+    private PisteServicesImpl pisteServices;
 
-@SpringBootTest(classes = PisteServicesImpl.class)
-class GestionStationSkiApplicationTests {
-
-	@MockBean
-	private PisteServicesImpl pisteServices;
-
-	@Test
-	void contextLoads() {
-		// This will only load the SkierServicesImpl and its dependencies, reducing the chance of a context failure.
-	}
+    @Test
+    void contextLoads() {
+        // This test verifies that the Spring application context loads without issues.
+    }
 }
