@@ -35,11 +35,17 @@ pipeline {
       }
     }
 
-//      stage('Deploy To Nexus') {
-//           steps {
-//             echo 'Deploiment to Nexus'
-//             sh 'mvn deploy -Dnexus.login=<admin> -Dnexus.password=<nexus>'
-//           }
-//         }
+    stage('Deploy To Nexus') {
+      steps {
+        echo 'Deploying to Nexus'
+        withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+          sh """
+            mvn deploy -DskipTests \
+              -Dnexus.username=${NEXUS_USER} \
+              -Dnexus.password=${NEXUS_PASS}
+          """
+        }
+      }
+    }
   }
 }
