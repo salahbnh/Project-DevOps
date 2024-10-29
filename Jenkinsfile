@@ -2,8 +2,6 @@ pipeline {
   agent any
   environment {
     SONAR_TOKEN = credentials('jenkins-sonar')
-    NEXUS_USER = credentials('nexus-credentials').username
-    NEXUS_PASS = credentials('nexus-credentials').password
   }
   stages {
     stage('Build') {
