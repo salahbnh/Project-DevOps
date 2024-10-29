@@ -2,6 +2,8 @@ pipeline {
   agent any
   environment {
     SONAR_TOKEN = credentials('jenkins-sonar')
+    NEXUS_USER = credentials('nexus-credentials').username
+    NEXUS_PASS = credentials('nexus-credentials').password
   }
   stages {
     stage('Build') {
@@ -39,11 +41,12 @@ pipeline {
       steps {
         echo 'Deploying to Nexus'
         withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
-          sh """
-            mvn deploy -DskipTests \
-              -Dnexus.username=${NEXUS_USER} \
-              -Dnexus.password=${NEXUS_PASS}
-          """
+            sh """
+                mvn deploy \
+                -Dnexus.username=$NEXUS_USER \
+                -Dnexus.password=$NEXUS_PASS \
+                -DskipTests
+            """
         }
       }
     }
