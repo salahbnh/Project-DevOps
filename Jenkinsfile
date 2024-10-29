@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    SONAR_TOKEN = credentials('Jenkins-sonar') // Make sure to set this in Jenkins Credentials
+    SONAR_TOKEN = credentials('Jenkins-sonar') 
   }
   stages {
     stage('Build') {
@@ -9,6 +9,19 @@ pipeline {
         echo 'Building Maven Project'
         sh 'mvn compile'
       }
+    }
+
+        stage('Mvn Test') {
+        steps {
+          echo 'Unit Tests'
+          sh 'mvn test jacoco:report'
+        }
+        post {
+            always {
+                junit '**/target/surefire-reports/TEST-*.xml'
+                jacoco execPattern: '**/target/jacoco.exec'
+            }
+        }
     }
     stage('Mvn SonarQube') {
       steps {
