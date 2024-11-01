@@ -35,6 +35,20 @@ pipeline {
       }
     }
 
+    stage('Docker Build') {
+          steps {
+            echo 'Building Docker Image'
+            sh 'docker build -t myapp:latest .'
+          }
+    }
+
+    stage('Docker Compose') {
+      steps {
+        echo 'Running Docker Compose'
+        sh 'docker-compose up -d'
+      }
+    }
+
     stage('Deploy To Nexus') {
       steps {
         echo 'Deploying to Nexus'
