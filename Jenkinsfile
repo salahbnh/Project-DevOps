@@ -50,7 +50,7 @@ pipeline {
         }
         cleanup {
           echo 'Stopping Docker Compose'
-          sh 'docker-compose down'
+          sh 'docker compose down'
         }
       }
     }
