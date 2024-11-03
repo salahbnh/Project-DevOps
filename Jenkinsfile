@@ -38,22 +38,23 @@ pipeline {
       }
     }
 
+
     stage('Integration Tests') {
       steps {
-        echo 'Running Integration Tests with Coverage'
-        sh 'mvn -Dtest=SkierServiceIntegrationTest test jacoco:report'
+        echo 'Running Integration Tests on Spring Boot container'
+        // Replace 'myapp-container' with the name of your Spring Boot container
+        sh """
+          docker exec app \
+          mvn -Dtest=SkierServiceIntegrationTest test
+        """
       }
       post {
         always {
           junit '**/target/surefire-reports/TEST-*.xml'
-          jacoco execPattern: '**/target/jacoco.exec'
-        }
-        cleanup {
-          echo 'Stopping Docker Compose'
-          sh 'docker compose down'
         }
       }
     }
+
 
     stage('Mvn SonarQube') {
       steps {
