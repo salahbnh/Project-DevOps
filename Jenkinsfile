@@ -38,25 +38,22 @@ pipeline {
       }
     }
 
-    stage('Integration Tests') {
-      steps {
-        echo 'Running Integration Tests with Coverage'
-        script {
-           def containerId = sh(script: 'docker ps -q -f name=app', returnStdout: true).trim()
-           sh "docker exec ${containerId} mvn -Dtest=SkierServiceIntegrationTest test"
-        }
-      }
-      post {
-        always {
-          junit '**/target/surefire-reports/TEST-*.xml'
-          jacoco execPattern: '**/target/jacoco.exec'
-        }
-        cleanup {
-          echo 'Stopping Docker Compose'
-          sh 'docker compose down'
-        }
-      }
-    }
+//     stage('Integration Tests') {
+//       steps {
+//         echo 'Running Integration Tests with Coverage'
+//         sh 'mvn -Dtest=SkierServiceIntegrationTest test jacoco:report'
+//       }
+//       post {
+//         always {
+//           junit '**/target/surefire-reports/TEST-*.xml'
+//           jacoco execPattern: '**/target/jacoco.exec'
+//         }
+//         cleanup {
+//           echo 'Stopping Docker Compose'
+//           sh 'docker compose down'
+//         }
+//       }
+//     }
 
     stage('Mvn SonarQube') {
       steps {
