@@ -11,17 +11,48 @@ pipeline {
       }
     }
 
-    stage('Mvn Test') {
-        steps {
-          echo 'Unit Tests'
-          sh 'mvn test jacoco:report'
+    stage('Unit Tests') {
+      steps {
+        echo 'Running Unit Tests with Coverage'
+        sh 'mvn -Dtest=SkierServicesImplTest test jacoco:report'
+      }
+      post {
+        always {
+          junit '**/target/surefire-reports/TEST-*.xml'
+          jacoco execPattern: '**/target/jacoco.exec'
         }
-        post {
-            always {
-                junit '**/target/surefire-reports/TEST-*.xml'
-                jacoco execPattern: '**/target/jacoco.exec'
-            }
+      }
+    }
+
+    stage('Docker Build') {
+      steps {
+        echo 'Building Docker Image'
+        sh 'docker build -t myapp:latest .'
+      }
+    }
+
+    stage('Docker Compose') {
+      steps {
+        echo 'Running Docker Compose'
+        sh 'docker-compose up -d'
+      }
+    }
+
+    stage('Integration Tests') {
+      steps {
+        echo 'Running Integration Tests with Coverage'
+        sh 'mvn -Dtest=SkierServiceIntegrationTest test jacoco:report'
+      }
+      post {
+        always {
+          junit '**/target/surefire-reports/TEST-*.xml'
+          jacoco execPattern: '**/target/jacoco.exec'
         }
+        cleanup {
+          echo 'Stopping Docker Compose'
+          sh 'docker-compose down'
+        }
+      }
     }
 
     stage('Mvn SonarQube') {
@@ -32,20 +63,6 @@ pipeline {
            -Dsonar.login=${SONAR_TOKEN} \
            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
        """
-      }
-    }
-
-    stage('Docker Build') {
-          steps {
-            echo 'Building Docker Image'
-            sh 'docker build -t myapp:latest .'
-          }
-    }
-
-    stage('Docker Compose') {
-      steps {
-        echo 'Running Docker Compose'
-        sh 'docker-compose up -d'
       }
     }
 
