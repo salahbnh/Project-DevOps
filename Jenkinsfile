@@ -43,7 +43,7 @@ pipeline {
         echo 'Running Integration Tests with Coverage'
         script {
            def containerId = sh(script: 'docker ps -q -f name=app', returnStdout: true).trim()
-           sh "docker exec -it ${containerId} mvn -Dtest=SkierServiceIntegrationTest test"
+           sh "docker exec ${containerId} mvn -Dtest=SkierServiceIntegrationTest test"
         }
       }
       post {
