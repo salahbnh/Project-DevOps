@@ -10,6 +10,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: root
     depends_on:
       - db
+    networks:
+      - app-network
 
   db:
     image: mysql:5.7
@@ -20,6 +22,11 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
 
 volumes:
   mysql_data:
+
+networks:
+  app-network:
