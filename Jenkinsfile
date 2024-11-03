@@ -41,7 +41,10 @@ pipeline {
     stage('Integration Tests') {
       steps {
         echo 'Running Integration Tests with Coverage'
-        sh 'mvn -Dtest=SkierServiceIntegrationTest test jacoco:report'
+        script {
+           def containerId = sh(script: 'docker ps -q -f name=app', returnStdout: true).trim()
+           sh "docker exec -it ${containerId} mvn -Dtest=SkierServiceIntegrationTest test"
+        }
       }
       post {
         always {
