@@ -38,22 +38,22 @@ pipeline {
       }
     }
 
-//     stage('Integration Tests') {
-//       steps {
-//         echo 'Running Integration Tests with Coverage'
-//         sh 'mvn -Dtest=SkierServiceIntegrationTest test jacoco:report'
-//       }
-//       post {
-//         always {
-//           junit '**/target/surefire-reports/TEST-*.xml'
-//           jacoco execPattern: '**/target/jacoco.exec'
-//         }
-//         cleanup {
-//           echo 'Stopping Docker Compose'
-//           sh 'docker compose down'
-//         }
-//       }
-//     }
+    stage('Integration Tests') {
+      steps {
+        echo 'Running Integration Tests with Coverage'
+        sh 'mvn -Dtest=SkierServiceIntegrationTest test jacoco:report'
+      }
+      post {
+        always {
+          junit '**/target/surefire-reports/TEST-*.xml'
+          jacoco execPattern: '**/target/jacoco.exec'
+        }
+        cleanup {
+          echo 'Stopping Docker Compose'
+          sh 'docker compose down'
+        }
+      }
+    }
 
     stage('Mvn SonarQube') {
       steps {
