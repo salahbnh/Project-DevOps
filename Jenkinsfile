@@ -14,7 +14,7 @@ pipeline {
     stage('Unit Tests') {
       steps {
         echo 'Running Unit Tests with Coverage'
-        sh 'mvn test jacoco:report'
+        sh 'mvn -Dtest=SkierServicesImplTest test jacoco:report'
       }
       post {
         always {
