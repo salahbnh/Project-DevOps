@@ -6,6 +6,11 @@ pipeline {
     IMAGE_TAG = "${DOCKER_REPO}:${BUILD_NUMBER}" // Use Jenkins build number for unique tagging
     CONTAINER_NAME = "devops-project-container"
   }
+
+  options {
+    timeout(time: 20, unit: 'MINUTES')  // Set a timeout for the entire pipeline
+  }
+
   stages {
     stage('Build') {
       steps {
@@ -26,10 +31,15 @@ pipeline {
         }
       }
     }
+
     stage('Build Docker Image') {
       steps {
         script {
           echo 'Building Docker Image'
+          // Pull the latest base images first to reduce build time if cached
+          sh "docker pull openjdk:17-jdk-slim || true"
+          sh "docker pull maven:3.8.5-openjdk-17 || true"
+          // Build the image
           sh "docker build -t ${IMAGE_TAG} ."
         }
       }
@@ -48,16 +58,18 @@ pipeline {
     }
 
     stage('Run Docker Container') {
-        steps {
-          script {
-            echo 'Running Docker Container'
-            // Stop and remove any existing container with the same name to avoid conflicts
-            sh "docker stop ${CONTAINER_NAME} || true && docker rm ${CONTAINER_NAME} || true"
+      steps {
+        script {
+          echo 'Running Docker Container'
+          // Stop and remove any existing container with the same name to avoid conflicts
+          sh "docker stop ${CONTAINER_NAME} || true && docker rm ${CONTAINER_NAME} || true"
 
-            // Pull and run the latest pushed image
-            sh "docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${IMAGE_TAG}"
-          }
+          // Pull the latest pushed image
+          sh "docker pull ${IMAGE_TAG}"
+          // Run the container
+          sh "docker run -d --name ${CONTAINER_NAME} -p 8089:8089 ${IMAGE_TAG}"
         }
+      }
     }
 
     stage('Mvn SonarQube') {
@@ -88,14 +100,16 @@ pipeline {
 
   post {
     always {
-      echo 'Cleaning up Docker containers'
-      sh 'docker stop myapp-container || true'
-      sh 'docker rm myapp-container || true'
-      // Optionally remove the local image to save space
+      echo 'Cleaning up Docker containers and images'
+      // Stop and remove the running container after the build
+      sh "docker stop ${CONTAINER_NAME} || true"
+      sh "docker rm ${CONTAINER_NAME} || true"
+      // Remove the built image to free up space
       sh "docker rmi ${IMAGE_TAG} || true"
     }
   }
 }
+
 
 
 //     stage('Integration Tests') {
