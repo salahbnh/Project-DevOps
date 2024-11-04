@@ -4,6 +4,7 @@ pipeline {
     SONAR_TOKEN = credentials('jenkins-sonar')
     DOCKER_REPO = 'docker.io/salahbnh1/devops-project'
     IMAGE_TAG = "${DOCKER_REPO}:${BUILD_NUMBER}" // Use Jenkins build number for unique tagging
+    CONTAINER_NAME = "devops-project-container"
   }
   stages {
     stage('Build') {
@@ -25,30 +26,16 @@ pipeline {
         }
       }
     }
-
-    stage('Docker Build') {
+    stage('Build Docker Image') {
       steps {
         script {
-          echo 'Checking if image already exists on Docker Hub...'
-          def imageExists = sh(script: "docker pull ${IMAGE_TAG}", returnStatus: true) == 0
-
-          if (!imageExists) {
-            echo 'Building Docker Image'
-            sh "docker build -t ${IMAGE_TAG} ."
-          } else {
-            echo 'Docker image already exists, skipping build.'
-          }
+          echo 'Building Docker Image'
+          sh "docker build -t ${IMAGE_TAG} ."
         }
       }
     }
 
     stage('Push Docker Image') {
-      when {
-        expression {
-          // Only push if the image was built in this pipeline run
-          return !sh(script: "docker pull ${IMAGE_TAG}", returnStatus: true) == 0
-        }
-      }
       steps {
         script {
           echo 'Pushing Docker Image to Docker Hub'
@@ -60,12 +47,17 @@ pipeline {
       }
     }
 
-    stage('Docker Run') {
-      steps {
-        echo 'Pulling Docker Image and Running Container'
-        sh "docker pull ${IMAGE_TAG}"
-        sh "docker run -d --name myapp-container -p 8089:8089 ${IMAGE_TAG}"
-      }
+    stage('Run Docker Container') {
+        steps {
+          script {
+            echo 'Running Docker Container'
+            // Stop and remove any existing container with the same name to avoid conflicts
+            sh "docker stop ${CONTAINER_NAME} || true && docker rm ${CONTAINER_NAME} || true"
+
+            // Pull and run the latest pushed image
+            sh "docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${IMAGE_TAG}"
+          }
+        }
     }
 
     stage('Mvn SonarQube') {
