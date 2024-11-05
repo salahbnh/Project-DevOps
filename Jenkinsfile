@@ -58,11 +58,18 @@ pipeline {
       }
     }
 
-    stage('Run Docker Container') {
+    stage('Build Docker Image') {
+         steps {
+           echo 'Building Docker Image'
+           sh "docker build -t ${DOCKER_REPO} ."
+         }
+       }
+
+    stage('Run Docker Compose') {
       steps {
-        echo 'Running Docker Container'
-        sh "docker stop ${CONTAINER_NAME} || true && docker rm ${CONTAINER_NAME} || true"
-        sh "docker run -d --name ${CONTAINER_NAME} -p 8089:8089 ${DOCKER_REPO}"
+        echo 'Starting Services with Docker Compose'
+        sh 'docker-compose down || true'  // Stop any previous instances
+        sh 'docker-compose up -d --build'
       }
     }
   }
