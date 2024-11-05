@@ -67,14 +67,14 @@ pipeline {
     }
   }
 
-  post {
-    always {
-      echo 'Cleaning up Docker containers and images'
-      sh "docker stop ${CONTAINER_NAME} || true"
-      sh "docker rm ${CONTAINER_NAME} || true"
-      sh "docker rmi ${DOCKER_REPO} || true"
-    }
-  }
+//   post {
+//     always {
+//       echo 'Cleaning up Docker containers and images'
+//       sh "docker stop ${CONTAINER_NAME} || true"
+//       sh "docker rm ${CONTAINER_NAME} || true"
+//       sh "docker rmi ${DOCKER_REPO} || true"
+//     }
+//   }
 }
 
 
