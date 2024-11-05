@@ -3,7 +3,6 @@ pipeline {
   environment {
     SONAR_TOKEN = credentials('jenkins-sonar')
     DOCKER_REPO = 'docker.io/salahbnh1/devops-project'
-    IMAGE_TAG = "${DOCKER_REPO}:${BUILD_NUMBER}" // Use Jenkins build number for unique tagging
     CONTAINER_NAME = "devops-project-container"
   }
   stages {
@@ -27,38 +26,7 @@ pipeline {
       }
     }
 
-    stage('Build Docker Image') {
-      steps {
-        script {
-          echo 'Building Docker Image'
-          sh "docker build -t ${IMAGE_TAG} ."
-        }
-      }
-    }
-
-    stage('Push Docker Image') {
-      steps {
-        script {
-          echo 'Pushing Docker Image to Docker Hub'
-          withCredentials([usernamePassword(credentialsId: 'docker-jenkins', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            sh "echo $DOCKER_PASS | docker login docker.io -u $DOCKER_USER --password-stdin"
-          }
-          sh "docker push ${IMAGE_TAG}"
-        }
-      }
-    }
-
-    stage('Run Docker Container') {
-      steps {
-        script {
-          echo 'Running Docker Container'
-          sh "docker stop ${CONTAINER_NAME} || true && docker rm ${CONTAINER_NAME} || true"
-          sh "docker run -d --name ${CONTAINER_NAME} -p 8089:8089 ${IMAGE_TAG}"
-        }
-      }
-    }
-
-    stage('Mvn SonarQube') {
+    stage('SonarQube Analysis') {
       steps {
         echo 'Static Analysis with SonarQube'
         sh """
@@ -82,14 +50,39 @@ pipeline {
         }
       }
     }
+
+    stage('Build Docker Image') {
+         steps {
+           echo 'Building Docker Image'
+           sh "docker build -t ${DOCKER_REPO} ."
+         }
+    }
+
+    stage('Push Docker Image') {
+      steps {
+        echo 'Pushing Docker Image to Docker Hub'
+        withCredentials([usernamePassword(credentialsId: 'docker-jenkins', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          sh "echo $DOCKER_PASS | docker login docker.io -u $DOCKER_USER --password-stdin"
+        }
+        sh "docker push ${DOCKER_REPO}"
+      }
+    }
+
+    stage('Run Docker Container') {
+      steps {
+        echo 'Running Docker Container'
+        sh "docker stop ${CONTAINER_NAME} || true && docker rm ${CONTAINER_NAME} || true"
+        sh "docker run -d --name ${CONTAINER_NAME} -p 8089:8089 ${DOCKER_REPO}"
+      }
+    }
   }
 
   post {
     always {
-      echo 'Cleaning up Docker containers'
-      sh 'docker stop myapp-container || true'
-      sh 'docker rm myapp-container || true'
-      sh "docker rmi ${IMAGE_TAG} || true"
+      echo 'Cleaning up Docker containers and images'
+      sh "docker stop ${CONTAINER_NAME} || true"
+      sh "docker rm ${CONTAINER_NAME} || true"
+      sh "docker rmi ${DOCKER_REPO} || true"
     }
   }
 }
