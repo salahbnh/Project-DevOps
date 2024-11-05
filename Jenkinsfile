@@ -2,7 +2,7 @@ pipeline {
   agent any
   environment {
     SONAR_TOKEN = credentials('jenkins-sonar')
-    DOCKER_REPO = 'docker.io/salahbnh1/devops-project'
+    DOCKER_REPO = 'devops-project'
     CONTAINER_NAME = "devops-project-container"
   }
   stages {
@@ -52,19 +52,9 @@ pipeline {
     }
 
     stage('Build Docker Image') {
-         steps {
-           echo 'Building Docker Image'
-           sh "docker build -t ${DOCKER_REPO} ."
-         }
-    }
-
-    stage('Push Docker Image') {
       steps {
-        echo 'Pushing Docker Image to Docker Hub'
-        withCredentials([usernamePassword(credentialsId: 'docker-jenkins', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-          sh "echo $DOCKER_PASS | docker login docker.io -u $DOCKER_USER --password-stdin"
-        }
-        sh "docker push ${DOCKER_REPO}"
+        echo 'Building Docker Image'
+        sh "docker build -t ${DOCKER_REPO} ."
       }
     }
 
@@ -86,7 +76,6 @@ pipeline {
     }
   }
 }
-
 
 
 
