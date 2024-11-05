@@ -61,8 +61,8 @@ pipeline {
     stage('Run Docker Compose') {
       steps {
         echo 'Starting Services with Docker Compose'
-        sh 'docker-compose down || true'  // Stop any previous instances
-        sh 'docker-compose up -d --build'
+        sh 'docker compose down || true'  // Stop any previous instances
+        sh 'docker compose up -d --build'
       }
     }
   }
