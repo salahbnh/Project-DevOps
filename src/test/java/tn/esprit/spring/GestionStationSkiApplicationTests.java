@@ -6,13 +6,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import tn.esprit.spring.services.PisteServicesImpl;
-import tn.esprit.spring.services.SkierServicesImpl;
+
 
 @SpringBootTest(classes = PisteServicesImpl.class)
 class GestionStationSkiApplicationTests {
 
 	@MockBean
-	private PisteServicesImpl pisteServices;
+	private PisteServicesImpl skierServices;
 
 	@Test
 	void contextLoads() {

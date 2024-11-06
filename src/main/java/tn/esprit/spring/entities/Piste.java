@@ -15,12 +15,11 @@ import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@AllArgsConstructor // Ensures a constructor with all fields is generated
 @NoArgsConstructor
 @FieldDefaults(level=AccessLevel.PRIVATE)
 @Entity
 public class Piste implements Serializable {
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	Long numPiste;
@@ -32,5 +31,7 @@ public class Piste implements Serializable {
 
 	@ManyToMany(mappedBy= "pistes")
 	Set<Skier> skiers;
-	
+
+	// Lombok will create this constructor if @AllArgsConstructor is applied
 }
+
