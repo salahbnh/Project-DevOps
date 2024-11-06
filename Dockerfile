@@ -1,15 +1,25 @@
-# Use an official OpenJDK image as the base image
-FROM openjdk:17-jdk-slim
+# Use Maven image for building and testing
+FROM maven:3.8.5-openjdk-17 as builder
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy only the JAR file into the container
-# Adjust the path to match your project's target directory in Jenkins
-COPY target/*.jar app.jar
+# Copy the entire project into the container (including pom.xml)
+COPY . .
 
-# Expose port 8080 to the outside world (or adjust as needed)
+# Run the build (optional)
+RUN mvn clean install -DskipTests
+
+# Use a slim JDK image for the runtime container
+FROM openjdk:17-jdk-slim
+
+WORKDIR /app
+
+# Copy the built jar from the builder stage
+COPY --from=builder /app/target/*.jar app.jar
+
+# Expose the application port
 EXPOSE 8089
 
-# Run the JAR file
+# Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
