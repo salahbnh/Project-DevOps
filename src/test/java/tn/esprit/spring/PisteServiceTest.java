@@ -1,4 +1,3 @@
-
 package tn.esprit.spring;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -8,9 +7,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tn.esprit.spring.entities.*;
-import tn.esprit.spring.repositories.*;
-import tn.esprit.spring.services.IPisteServices;
+import tn.esprit.spring.entities.Piste;
+import tn.esprit.spring.repositories.IPisteRepository;
+import tn.esprit.spring.services.PisteServicesImpl;
+import tn.esprit.spring.entities.Color; // Import the Color enum
 
 
 import java.util.Arrays;
@@ -22,19 +22,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-
-@ExtendWith(MockitoExtension.class)
-class PisteServiceTest {
+@ExtendWith(MockitoExtension.class)  // This ensures that Mockito annotations are processed
+class PisteServicesImplTest {
 
 	@Mock
-	private IPisteRepository pisteRepository;
+	private IPisteRepository pisteRepository;  // Mock the repository
 
 	@InjectMocks
-	private IPisteServices pisteService; // Assuming this is the concrete implementation of IPisteServices
+	private PisteServicesImpl pisteService;  // Inject the mocked repository into the service class
 
 	@BeforeEach
 	void setUp() {
-		MockitoAnnotations.openMocks(this);
+		MockitoAnnotations.openMocks(this);  // Initialize mocks
 	}
 
 	@Test
@@ -65,7 +64,6 @@ class PisteServiceTest {
 		assertEquals(expectedPistes.size(), actualPistes.size());
 		verify(pisteRepository, times(1)).findAll();
 	}
-
 
 	@Test
 	void testAddPiste() {
@@ -116,5 +114,4 @@ class PisteServiceTest {
 		assertEquals(expectedPiste.getNumPiste(), actualPiste.getNumPiste());
 		verify(pisteRepository, times(1)).findById(pisteId);
 	}
-
 }

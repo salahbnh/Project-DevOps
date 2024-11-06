@@ -12,7 +12,7 @@ import tn.esprit.spring.services.PisteServicesImpl;
 class GestionStationSkiApplicationTests {
 
 	@MockBean
-	private PisteServicesImpl skierServices;
+	private PisteServicesImpl pisteServices;
 
 	@Test
 	void contextLoads() {
