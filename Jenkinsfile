@@ -55,7 +55,7 @@ pipeline {
       steps {
         echo 'Running Integration Tests in Docker Container'
         // Run the tests inside the app container
-        sh 'docker compose exec app mvn -Dtest=SkierServiceIntegrationTest test'
+        sh 'docker compose exec app mvn -Dtest=SkierServiceIntegrationTest test jacoco:report'
       }
       post {
         always {
@@ -76,12 +76,12 @@ pipeline {
       }
     }
 
-    stage('Tear Down Docker Compose') {
-      steps {
-        echo 'Stopping Docker Compose'
-        sh 'docker compose down'
-      }
-    }
+//     stage('Tear Down Docker Compose') {
+//       steps {
+//         echo 'Stopping Docker Compose'
+//         sh 'docker compose down'
+//       }
+//     }
 
     stage('Deploy To Nexus') {
       steps {
