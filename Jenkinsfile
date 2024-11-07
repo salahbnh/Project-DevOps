@@ -1,8 +1,8 @@
 pipeline {
     agent any
-    // environment {
-    //     SONAR_TOKEN = credentials('Jenkins-sonar')
-    // }
+    environment {
+        SONAR_TOKEN = credentials('Jenkins-sonar')
+    }
     stages {
         stage('Build') {
             steps {
@@ -19,7 +19,7 @@ pipeline {
         stage('Mvn SonarQube') {
             steps {
                 echo 'Static Analysis'
-                sh "mvn sonar:sonar"
+                sh "mvn sonar:sonar -Dsonar.login=${Jenkins}"
             }
         }
     }
