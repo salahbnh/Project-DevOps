@@ -35,5 +35,19 @@ pipeline {
             sh 'mvn test'
           }
         }
+
+    stage('Tests - JUnit/Mockito') {
+                    steps {
+                        echo 'Running Tests'
+                        sh 'mvn test'
+                    }
+                }
+
+   stage('Generate JaCoCo Report') {
+                    steps {
+                        echo 'Generating JaCoCo Report'
+                        sh 'mvn jacoco:report'
+                    }
+                }
   }
 }
