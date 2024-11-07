@@ -16,11 +16,12 @@ pipeline {
                 sh 'mvn test '
             }
         }
-        stage('Mvn SonarQube') {
-            steps {
-                echo 'Static Analysis'
-                sh "mvn sonar:sonar -Dsonar.login=${Jenkins}"
-            }
-        }
+        stage('SonarQube Analysis') {
+                    steps {
+                        withSonarQubeEnv('Jenkins-sonar') {
+                           sh 'mvn sonar:sonar'
+                        }
+                    }
+                }
     }
 }
