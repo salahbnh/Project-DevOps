@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        SONAR_TOKEN = credentials('Jenkins-sonar')
+        SONAR_TOKEN = credentials('Jenkins')
     }
     stages {
         stage('Build') {
