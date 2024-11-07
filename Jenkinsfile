@@ -5,6 +5,7 @@ pipeline {
   }
 
   stages {
+
     stage('Build') {
       steps {
         echo 'Building Maven Project'
@@ -46,7 +47,7 @@ pipeline {
     stage('Start Docker Compose') {
       steps {
         echo 'Starting Docker Compose for Integration Tests'
-        sh 'docker-compose up -d'
+        sh 'docker compose up -d'
       }
     }
 
