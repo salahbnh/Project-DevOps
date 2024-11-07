@@ -1,25 +1,15 @@
-# Use Maven image for building and testing
-FROM maven:3.8.5-openjdk-17 as builder
+# Start from an OpenJDK base image with Maven
+FROM maven:3.6.3-openjdk-8-slim
 
-# Set the working directory inside the container
+# Copy the source code and dependencies to the container
+COPY . /app
 WORKDIR /app
 
-# Copy the entire project into the container (including pom.xml)
-COPY . .
+# Build the application inside the container
+RUN mvn clean package -DskipTests
 
-# Run the build (optional)
-RUN mvn clean install -DskipTests
-
-# Use a slim JDK image for the runtime container
-FROM openjdk:17-jdk-slim
-
-WORKDIR /app
-
-# Copy the built jar from the builder stage
-COPY --from=builder /app/target/*.jar app.jar
-
-# Expose the application port
+# Expose port 8080
 EXPOSE 8089
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Start the app
+ENTRYPOINT ["java", "-jar", "target/app.jar"]

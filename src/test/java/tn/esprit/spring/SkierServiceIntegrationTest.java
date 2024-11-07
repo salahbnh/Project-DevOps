@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
+@SpringBootTest(properties = {"spring.profiles.active=docker"})
 @Transactional
 public class SkierServiceIntegrationTest {
 

@@ -1,40 +1,21 @@
 version: '3.8'
-
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql_container
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: stationSki
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-    ports:
-      - "3306:3306"
-    networks:
-      - app-network
-    volumes:
-      - mysql_data:/var/lib/mysql
-
   app:
-    build:
-      context: .
-    image: devops-project
-    container_name: devops-project-container
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/stationSki
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+    build: .
     ports:
       - "8089:8089"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/gestion_ski
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
     depends_on:
       - mysql
-    networks:
-      - app-network
+    entrypoint: ["/bin/sh", "-c", "./wait-for-it.sh mysql:3306 -- ./start-app.sh"]
 
-networks:
-  app-network:
-    driver: bridge
-
-volumes:
-  mysql_data:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: gestion_ski
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
