@@ -23,5 +23,10 @@ pipeline {
                         }
                     }
                 }
+                 stage('DeployToNexus') {
+                            steps {
+                                sh 'mvn deploy -Dnexus.login=<username> -Dnexus.password=<password>'
+                            }
+                        }
     }
 }
