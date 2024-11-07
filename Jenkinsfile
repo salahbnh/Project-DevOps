@@ -4,16 +4,8 @@ pipeline {
     SONAR_TOKEN = credentials('jenkins-sonar')
   }
   stages {
-    stage('Checkout GIT') {
-      steps {
-        echo 'Pulling from Git repository'
-        git(
-          branch: 'ahmed',
-          url: 'https://github.com/salahbnh/Project-DevOps.git',
-          credentialsId: 'ahmed'
-        )
-      }
-    }
+
+
 
     stage('Build') {
       steps {
