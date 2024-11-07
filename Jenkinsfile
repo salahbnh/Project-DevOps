@@ -19,7 +19,7 @@ pipeline {
         stage('Mvn SonarQube') {
             steps {
                 echo 'Static Analysis'
-                sh "mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
+                sh "mvn sonar:sonar -Dsonar.login=${Jenkins-sonar}"
             }
         }
     }
