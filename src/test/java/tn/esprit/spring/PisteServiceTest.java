@@ -10,108 +10,77 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import tn.esprit.spring.entities.Piste;
 import tn.esprit.spring.repositories.IPisteRepository;
 import tn.esprit.spring.services.PisteServicesImpl;
-import tn.esprit.spring.entities.Color; // Import the Color enum
-
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)  // This ensures that Mockito annotations are processed
+@ExtendWith(MockitoExtension.class)
 class PisteServicesImplTest {
 
-	@Mock
-	private IPisteRepository pisteRepository;  // Mock the repository
+    @Mock
+    private IPisteRepository pisteRepository;
 
-	@InjectMocks
-	private PisteServicesImpl pisteService;  // Inject the mocked repository into the service class
+    @InjectMocks
+    private PisteServicesImpl pisteServices;
 
-	@BeforeEach
-	void setUp() {
-		MockitoAnnotations.openMocks(this);  // Initialize mocks
-	}
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
-	@Test
-	void testRetrieveAllPistes() {
-		// Arrange
-		Piste piste1 = new Piste();
-		piste1.setNumPiste(1L);
-		piste1.setNamePiste("Piste1");
-		piste1.setColor(Color.BLUE);
-		piste1.setLength(300);
-		piste1.setSlope(15);
+    @Test
+    void testRetrieveAllPistes() {
+        // Arrange
+        List<Piste> pistes = Arrays.asList(new Piste(), new Piste());
+        when(pisteRepository.findAll()).thenReturn(pistes);
 
-		Piste piste2 = new Piste();
-		piste2.setNumPiste(2L);
-		piste2.setNamePiste("Piste2");
-		piste2.setColor(Color.RED);
-		piste2.setLength(400);
-		piste2.setSlope(20);
+        // Act
+        List<Piste> result = pisteServices.retrieveAllPistes();
 
-		List<Piste> expectedPistes = Arrays.asList(piste1, piste2);
+        // Assert
+        assertEquals(2, result.size());
+        verify(pisteRepository, times(1)).findAll();
+    }
 
-		when(pisteRepository.findAll()).thenReturn(expectedPistes);
+    @Test
+    void testAddPiste() {
+        // Arrange
+        Piste piste = new Piste();
+        when(pisteRepository.save(any(Piste.class))).thenReturn(piste);
 
-		// Act
-		List<Piste> actualPistes = pisteService.retrieveAllPistes();
+        // Act
+        Piste result = pisteServices.addPiste(piste);
 
-		// Assert
-		assertEquals(expectedPistes.size(), actualPistes.size());
-		verify(pisteRepository, times(1)).findAll();
-	}
+        // Assert
+        assertEquals(piste, result);
+        verify(pisteRepository, times(1)).save(piste);
+    }
 
-	@Test
-	void testAddPiste() {
-		// Arrange
-		Piste newPiste = new Piste();
-		newPiste.setNumPiste(null);
-		newPiste.setNamePiste("NewPiste");
-		newPiste.setColor(Color.GREEN);
-		newPiste.setLength(350);
-		newPiste.setSlope(10);
+    @Test
+    void testRemovePiste() {
+        // Act
+        pisteServices.removePiste(1L);
 
-		Piste savedPiste = new Piste();
-		savedPiste.setNumPiste(1L);
-		savedPiste.setNamePiste("NewPiste");
-		savedPiste.setColor(Color.GREEN);
-		savedPiste.setLength(350);
-		savedPiste.setSlope(10);
+        // Assert
+        verify(pisteRepository, times(1)).deleteById(1L);
+    }
 
-		when(pisteRepository.save(any(Piste.class))).thenReturn(savedPiste);
+    @Test
+    void testRetrievePiste() {
+        // Arrange
+        Piste piste = new Piste();
+        when(pisteRepository.findById(1L)).thenReturn(Optional.of(piste));
 
-		// Act
-		Piste result = pisteService.addPiste(newPiste);
+        // Act
+        Piste result = pisteServices.retrievePiste(1L);
 
-		// Assert
-		assertNotNull(result);
-		assertEquals(savedPiste.getNumPiste(), result.getNumPiste());
-		verify(pisteRepository, times(1)).save(newPiste);
-	}
-
-	@Test
-	void testRetrievePiste() {
-		// Arrange
-		Long pisteId = 1L;
-		Piste expectedPiste = new Piste();
-		expectedPiste.setNumPiste(pisteId);
-		expectedPiste.setNamePiste("Piste1");
-		expectedPiste.setColor(Color.BLUE);
-		expectedPiste.setLength(300);
-		expectedPiste.setSlope(15);
-
-		when(pisteRepository.findById(pisteId)).thenReturn(Optional.of(expectedPiste));
-
-		// Act
-		Piste actualPiste = pisteService.retrievePiste(pisteId);
-
-		// Assert
-		assertNotNull(actualPiste);
-		assertEquals(expectedPiste.getNumPiste(), actualPiste.getNumPiste());
-		verify(pisteRepository, times(1)).findById(pisteId);
-	}
+        // Assert
+        assertEquals(piste, result);
+        verify(pisteRepository, times(1)).findById(1L);
+    }
 }
