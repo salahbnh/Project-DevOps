@@ -1,5 +1,12 @@
 version: '3.8'
 services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: gestion_ski
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
   app:
     build: .
     ports:
@@ -10,12 +17,4 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
     depends_on:
       - mysql
-    entrypoint: ["/bin/sh", "-c", "./wait-for-it.sh mysql:3306 -- ./start-app.sh"]
 
-  mysql:
-    image: mysql:5.7
-    environment:
-      MYSQL_DATABASE: gestion_ski
-      MYSQL_ROOT_PASSWORD: password
-    ports:
-      - "3306:3306"
