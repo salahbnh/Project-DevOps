@@ -13,14 +13,7 @@ pipeline {
         stage('Mvn Test') {
             steps {
                 echo 'Unit Tests'
-                sh 'mvn clean test jacoco:report'
-            }
-            post {
-                always {
-                    // Temporarily disable if not needed:
-                    // junit '**/target/surefire-reports/TEST-*.xml'
-                    jacoco execPattern: '**/target/jacoco.exec'
-                }
+                sh 'mvn test '
             }
         }
         stage('Mvn SonarQube') {
