@@ -25,7 +25,7 @@ pipeline {
                 }
                  stage('DeployToNexus') {
                             steps {
-                                sh 'mvn deploy -Dnexus.login=<username> -Dnexus.password=<password>'
+                                sh 'mvn deploy -Dnexus.login=admin -Dnexus.password=nexus'
                             }
                         }
     }
