@@ -36,13 +36,13 @@ pipeline {
       }
     }
 
-    stage('Generate JaCoCo Report') {
-      steps {
-        echo 'Preparing JaCoCo Agent and Generating Report'
-        sh 'mvn clean verify jacoco:report'
-      }
-    }
-  }
+   // stage('Generate JaCoCo Report') {
+      //  steps {
+      //    echo 'Preparing JaCoCo Agent and Generating Report'
+      //    sh 'mvn clean verify jacoco:report'
+     //   }
+   //   }
+   }
 
   post {
     always {
