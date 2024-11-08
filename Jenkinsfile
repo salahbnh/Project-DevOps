@@ -41,7 +41,17 @@ pipeline {
             }
           }
         }
+        stage('Docker Image') {
+          steps {
+            sh 'docker build -t gestion-station-ski .'
+          }
+        }
 
+        stage('Docker Compose') {
+          steps {
+            sh 'docker compose up -d'
+          }
+        }
 
   }
 
