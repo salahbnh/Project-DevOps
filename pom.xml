@@ -23,13 +23,13 @@
 	</properties>
 
 	<!-- Repositories -->
-	<repositories>
+	<distributionManagement>
 		<repository>
 			<id>deploymentRepo</id>
 			<name>Nexus Repository</name>
 			<url>http://192.168.152.129:8081/repository/maven-snapshots/</url>
 		</repository>
-	</repositories>
+	</distributionManagement>
 
 	<dependencies>
 		<!-- Spring Boot Starter Web -->
