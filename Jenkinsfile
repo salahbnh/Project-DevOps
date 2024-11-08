@@ -23,9 +23,14 @@ pipeline {
                         }
                     }
                 }
+                stage('Build') {
+                    steps {
+                           sh 'mvn package'
+                            }
+                        }
                 stage('Deploy to Nexus') {
-                            steps {
-                                sh 'mvn clean deploy -DskipTests'
+                    steps {
+                           sh 'mvn clean deploy -DskipTests'
                             }
                         }
     }
