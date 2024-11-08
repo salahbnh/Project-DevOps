@@ -23,9 +23,9 @@ pipeline {
                         }
                     }
                 }
-                 stage('DeployToNexus') {
+                stage('Deploy to Nexus') {
                             steps {
-                                sh 'mvn deploy -Dnexus.login=admin -Dnexus.password=nexus'
+                                sh 'mvn clean deploy -DskipTests'
                             }
                         }
     }
