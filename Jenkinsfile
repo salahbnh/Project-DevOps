@@ -76,13 +76,6 @@ pipeline {
       }
     }
 
-//     stage('Tear Down Docker Compose') {
-//       steps {
-//         echo 'Stopping Docker Compose'
-//         sh 'docker compose down'
-//       }
-//     }
-
     stage('Deploy To Nexus') {
       steps {
         echo 'Deploying to Nexus'
@@ -97,4 +90,20 @@ pipeline {
       }
     }
   }
+  post {
+    success {
+        emailext (
+            subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "The build completed successfully. Check the details at ${env.BUILD_URL}.",
+            recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+        )
+    }
+    failure {
+        emailext (
+            subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "The build failed. Check the details at ${env.BUILD_URL}.",
+            recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+        )
+    }
+ }
 }
