@@ -91,19 +91,15 @@ pipeline {
     }
   }
   post {
-    success {
-        emailext (
-            subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            body: "The build completed successfully. Check the details at ${env.BUILD_URL}.",
-            recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-        )
+      success {
+        mail to: 'salah.bounouh420@gmail.com',
+             subject: "Jenkins Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+             body: "Good news! The Jenkins build ${env.JOB_NAME} #${env.BUILD_NUMBER} succeeded.\nCheck it at ${env.BUILD_URL}"
+      }
+      failure {
+        mail to: 'salah.bounouh420@gmail.com',
+             subject: "Jenkins Build Failure: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+             body: "Oops! The Jenkins build ${env.JOB_NAME} #${env.BUILD_NUMBER} failed.\nCheck it at ${env.BUILD_URL}"
+      }
     }
-    failure {
-        emailext (
-            subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            body: "The build failed. Check the details at ${env.BUILD_URL}.",
-            recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-        )
-    }
- }
 }
