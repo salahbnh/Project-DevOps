@@ -18,14 +18,19 @@
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
-		<java.version>17</java.version> <!-- Updated to Java 17 -->
+		<java.version>17</java.version>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
 	</properties>
-	<repository>
-		<id>deploymentRepo</id>
-		<name>Nexus Repository</name>
-		<url>http://192.168.152.129:8081/repository/maven-snapshots/</url>
-	</repository>
+
+	<!-- Repositories -->
+	<repositories>
+		<repository>
+			<id>deploymentRepo</id>
+			<name>Nexus Repository</name>
+			<url>http://192.168.152.129:8081/repository/maven-snapshots/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<!-- Spring Boot Starter Web -->
 		<dependency>
@@ -117,17 +122,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-
-			<!-- SonarQube Plugin Configuration -->
-			<plugin>
-				<groupId>org.sonarsource.scanner.maven</groupId>
-				<artifactId>sonar-maven-plugin</artifactId>
-				<version>4.0.0.4121</version>
-				<configuration>
-					<sonar.login>${env.SONAR_TOKEN}</sonar.login> <!-- Pass token securely -->
-					<sonar.host.url>http://your.sonarqube.server</sonar.host.url> <!-- SonarQube server URL -->
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
