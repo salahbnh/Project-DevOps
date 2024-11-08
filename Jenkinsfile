@@ -4,12 +4,12 @@ pipeline {
         SONAR_TOKEN = credentials('Jenkins-sonar')
     }
     stages {
-        stage('Build') {
-            steps {
-                echo 'Building Maven Project'
-                sh 'mvn clean package -DskipTests'
-            }
-        }
+//         stage('Build') {
+//             steps {
+//                 echo 'Building Maven Project'
+//                 sh 'mvn clean package -DskipTests'
+//             }
+//         }
         stage('Mvn Test') {
             steps {
                 echo 'Unit Tests'
